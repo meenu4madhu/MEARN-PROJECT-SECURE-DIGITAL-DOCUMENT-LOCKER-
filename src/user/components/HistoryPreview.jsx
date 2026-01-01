@@ -1,0 +1,41 @@
+import { historyFiles } from "./files/historydata";
+import { HiOutlineEye } from "react-icons/hi2";
+import { useNavigate } from "react-router-dom";
+
+
+function HistoryPreview() {
+ const navigate = useNavigate();
+  const latestFiles = historyFiles.slice(0, 4);
+
+  return (
+    <>
+    <div className="p-9 ml-30 mr-20 rounded-2xl bg-white/10 border border-white/10 text-white">
+      <div className="flex  justify-between items-center mb-4">
+        <h2 className="text-2xl font-semibold text-violet-500">Recent Files</h2>
+        <button
+          onClick={() => navigate("/user/history")}
+          className="text-sm text-indigo-400 hover:underline"
+        >
+          View more →
+        </button>
+      </div>
+
+      <div className="space-y-3 ">
+        {latestFiles.map(file => (
+          <div
+            key={file.id}
+            className="flex justify-between items-center p-3 rounded-lg bg-black/30 hover:bg-white/5"
+          >
+            <div>
+              <p className="font-medium">{file.name}</p>
+              <span className="text-xs text-white/60">{file.folder}</span>
+            </div>
+            <HiOutlineEye className="text-indigo-300 text-xl cursor-pointer" />
+          </div>
+        ))}
+      </div>
+    </div>
+    </>
+  );
+}
+export default HistoryPreview
