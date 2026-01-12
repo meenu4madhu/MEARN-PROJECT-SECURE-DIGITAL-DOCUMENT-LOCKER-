@@ -1,11 +1,35 @@
 import React, { useState } from "react";
 import { MessageSquare, Send, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { submitComplaintAPI } from "../../services/allAPI";
+
+
 
 function Complaintsubmit() {
-    const [complaints] = useState([]); // empty for now
+    const [complaints,setComplaints] = useState([]); // empty for now
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+
+const handleSubmit = async () => {
+  if (!message) return alert("Please write your complaint!");
+
+  try {
+    const token = sessionStorage.getItem("token");
+    const headers = { Authorization: `Bearer ${token}` }; // correct syntax
+
+    const res = await submitComplaintAPI(message,headers); // pass headers to API
+    if (res.status === 200) {
+      setComplaints([res.data, ...complaints]); // update state
+      setMessage(""); // clear textarea
+      alert("Complaint submitted successfully!");
+    }
+  } catch (err) {
+    console.log(err);
+    alert("Failed to submit complaint!");
+  }
+};
+
+
 
   return (
      <div className="min-h-screen bg-gradient-to-br from-black via-indigo-950 to-violet-950 p-6 text-white">
@@ -27,7 +51,7 @@ function Complaintsubmit() {
 
       <div>
         <h1 className="text-2xl font-bold text-white">
-          My Complaints
+         Complaints
         </h1>
         <p className="text-sm text-white/70">
           Raise issues and track admin responses
@@ -61,12 +85,13 @@ function Complaintsubmit() {
           className="w-full h-28 bg-black/40 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
 
-        <button
-          className="mt-4 flex items-center gap-2 px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition"
-        >
-          <Send size={16} />
-          Submit
-        </button>
+       <button
+  onClick={handleSubmit} // <-- call the function here
+  className="mt-4 flex items-center gap-2 px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition"
+>
+  <Send size={16} />
+  Submit
+</button>
       </div>
 
       {/* Complaints List */}
@@ -80,14 +105,14 @@ function Complaintsubmit() {
         </div>
       ) : (
         <div className="space-y-4">
-          {complaints.map((item) => (
+          {complaints?.map((item) => (
             <div
-              key={item.id}
+              key={item?._id}
               className="p-5 rounded-xl bg-white/10 border border-white/10"
             >
-              <p className="font-medium">{item.message}</p>
+              <p className="font-medium">{item?.message}</p>
               <span className="text-xs text-white/60">
-                Status: {item.status}
+                Status: {item?.status}
               </span>
             </div>
           ))}

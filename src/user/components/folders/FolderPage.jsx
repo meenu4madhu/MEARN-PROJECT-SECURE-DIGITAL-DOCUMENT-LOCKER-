@@ -1,37 +1,71 @@
-import { Folder } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { PiFoldersFill } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
+import { getAllFoldersAPI } from "../../../services/allAPI";
+import FolderPreview from "./FolderPreview";
+
 
 function FolderPage() {
   const navigate = useNavigate();
+  const [folderArray,setFolderArray] = useState([])
+  console.log(folderArray);
+  
+  useEffect(()=>{
+    getAllFolders()
+  },[])
 
-  const folders = [
-    { id: 1, name: "ID Proofs", files: 4 },
-    { id: 2, name: "Certificates", files: 6 },
-    { id: 3, name: "Bills", files: 2 },
-    { id: 4, name: "Office Docs", files: 5 },
-    { id: 5, name: "Personal", files: 8 },
-  ];
+
+  const getAllFolders = async ()=>{
+  const result = await getAllFoldersAPI()
+  if(result.status==200){
+    setFolderArray(result.data)
+  }
+  else{
+    console.log(result);
+    
+  }
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-indigo-950 to-violet-950 p-6 text-white">
-
-      <h1 className="text-2xl font-bold mb-6">All Folders</h1>
-
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {folders.map((folder) => (
-          <div
-            key={folder.id}
-            onClick={() => navigate(`/user/folders/${folder.id}`)}
-            className="p-6 rounded-2xl bg-white/10 border border-white/10
-            hover:bg-white/20 transition cursor-pointer"
-          >
-            <Folder className="text-indigo-400 mb-3" size={32} />
-            <h3 className="font-semibold">{folder.name}</h3>
-            <p className="text-sm text-white/60">{folder.files} files</p>
-          </div>
-        ))}
+    <div className="min-h-screen bg-gradient-to-br from-black via-indigo-950 to-violet-950 text-white p-6">
+      
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8 p-6   bg-gradient-to-r from-violet-700 via-indigo-700 to-black rounded-xl shadow-lg border border-white/10">
+        <h1 className="text-2xl font-bold">All Folders</h1>
+        <button
+          onClick={() => navigate("/user-dashboard")}
+          className="px-4 py-2 rounded-xl bg-black/40 hover:bg-violet-700 transition"
+        >
+          Back to Dashboard
+        </button>
       </div>
-    </div>
+
+      {/* Folders Grid */}
+
+      {
+      
+      folderArray?.length > 0 ? (
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 ">
+          {folderArray?.map((folder) => (
+            <div
+              key={folder?._id}
+              onClick={() => navigate(`/user/folder/${folder?._id}`)}
+              className="flex flex-col  items-center justify-center p-6 rounded-2xl bg-gradient-to-br from-indigo-700 via-violet-700 to-black
+                         cursor-pointer hover:scale-105 transition-transform shadow-lg border border-white/10"
+            >
+              <PiFoldersFill className="text-yellow-400 text-6xl mb-2" />
+              <span className="text-white font-medium truncate">{folder?.foldername}</span>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center mt-24 opacity-70">
+          <PiFoldersFill size={64} className="text-yellow-400 mb-4" />
+          <p>No folders created yet</p>
+        </div>
+      )}
+     </div>
+  
   );
 }
 

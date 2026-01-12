@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 
 function Createfolder({ open, onClose, onCreate }) {
-    const [folderName, setFolderName] = useState("");
+    const [foldername, setFolderName] = useState("");
 
   if (!open) return null;
 
   const handleCreate = () => {
-    if (!folderName.trim()) return;
-    onCreate(folderName);
+    if (!foldername.trim()) return;
+    onCreate(foldername);
     setFolderName("");
     onClose();
   };
@@ -31,7 +31,7 @@ function Createfolder({ open, onClose, onCreate }) {
         <input
           type="text"
           placeholder="Folder name"
-          value={folderName}
+          value={foldername}
           onChange={(e) => setFolderName(e.target.value)}
           className="placeholder-gray-400 w-full border rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />

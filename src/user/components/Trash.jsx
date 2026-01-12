@@ -1,6 +1,8 @@
 import { Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
+
+
 function Trash() {
   return (
     <>
@@ -20,6 +22,7 @@ function Trash() {
       >
         Open Trash
       </Link>
+  
     </div>
     </>
   )

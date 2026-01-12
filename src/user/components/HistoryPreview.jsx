@@ -1,11 +1,36 @@
-import { historyFiles } from "./files/historydata";
+import { historyFiles } from "./files/historyData";
 import { HiOutlineEye } from "react-icons/hi2";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useFiles } from "../../../src/context/FileAndFolderContext"
+import { useEffect } from "react";
+import { viewFileAPI } from "../../services/allAPI";
 
 
 function HistoryPreview() {
- const navigate = useNavigate();
-  const latestFiles = historyFiles.slice(0, 4);
+
+  const navigate = useNavigate();
+  const { folderId } = useParams;
+  const { files,handleGetFiles} = useFiles();
+   const latestFiles = files.slice(-4).reverse();
+   useEffect(() => {
+        handleGetFiles()
+      }, [folderId]);
+    const handleView = async (fileId) => {
+      const response = await viewFileAPI(fileId); // responseType: 'blob'
+    
+      if (response.status === 200) {
+        // Use the correct MIME type from the response headers
+        const contentType = response.headers["content-type"];
+        const blob = new Blob([response.data], { type: contentType });
+    
+        // Open in new tab
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, "_blank");
+      } else {
+        console.log("error:", response);
+      }
+    };
+  
 
   return (
     <>
@@ -21,16 +46,16 @@ function HistoryPreview() {
       </div>
 
       <div className="space-y-3 ">
-        {latestFiles.map(file => (
+        {latestFiles?.map(file => (
           <div
-            key={file.id}
+            key={file?._id}
             className="flex justify-between items-center p-3 rounded-lg bg-black/30 hover:bg-white/5"
           >
             <div>
-              <p className="font-medium">{file.name}</p>
-              <span className="text-xs text-white/60">{file.folder}</span>
+              <p className="font-medium">{file?.filename}</p>
+              <span className="text-xs text-white/60"></span>
             </div>
-            <HiOutlineEye className="text-indigo-300 text-xl cursor-pointer" />
+            <HiOutlineEye onClick={() => handleView(file._id)} className="text-indigo-300 text-xl cursor-pointer" />
           </div>
         ))}
       </div>

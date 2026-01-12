@@ -11,7 +11,11 @@ import Trashpage from "./user/pages/Trashpage"
 import Complaintsubmit from "./user/pages/Complaintsubmit"
 import History from "./user/pages/History"
 import FolderPage from "./user/components/folders/FolderPage"
-
+import Admindashboard from "./admin/pages/Admindashboard"
+import Userslist from "./admin/pages/Userslist"
+import Complaintsview from"./admin/pages/Complaintsview"
+import Adminstorage from"./admin/pages/Adminstorage"
+import ShareFile from "./user/pages/ShareFile"
 
 
 
@@ -37,9 +41,19 @@ useEffect(() => {
         <Route path='/user-dashboard' element={ <Userdashboard sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />}/>
         <Route path='/user/storage' element={<Storage/>}/>
         <Route path='/user/history' element={<History/>}/>
+        <Route path="/user/folder/:folderId" element={<History />} />
         <Route path='/user/trash' element={<Trashpage/>}/>
-        <Route path='/user/complaint' element={<Complaintsubmit/>}/>
-        <Route path="/user/folders" element={<FolderPage />} />
+        <Route path='/submit-complaint' element={<Complaintsubmit/>}/>
+        <Route path="/user/allfolders" element={<FolderPage />} />
+        <Route path="/share/:token" element={<ShareFile />} />
+
+
+        <Route path="/admin/dashboard" element={<Admindashboard />} />
+        <Route path="/admin/all-users" element={<Userslist />} />
+        <Route path="/admin/view-complaints" element={<Complaintsview />} />
+        <Route path="/admin/storage" element={<Adminstorage />} />
+
+        
 
       </Routes>
   

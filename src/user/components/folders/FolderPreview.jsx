@@ -1,57 +1,55 @@
-import { Folder, ArrowRight } from "lucide-react";
+import React from "react";
+import { PiFoldersFill } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 
-function FolderPreview() {
+
+function FolderPreview({folders }) {
   const navigate = useNavigate();
+console.log("previewdata:",folders);
 
-  const folders = [
-    { id: 1, name: "ID Proofs", files: 4 },
-    { id: 2, name: "Certificates", files: 6 },
-    { id: 3, name: "Bills", files: 2 },
-    { id: 4, name: "Office Docs", files: 5 },
-  ];
-
-  const latestFolders = folders.slice(0, 3);
 
   return (
-    <div className="mx-4 p-6 rounded-2xl bg-white/10 border border-white/10 text-white">
-      
-      {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold flex items-center gap-2">
-          <Folder className="text-indigo-400" />
-          Folders
-        </h2>
+    <div className="mt-8 px-34">
+      <h2 className="text-xl font-bold text-white mb-4">Your Folders</h2>
 
-        <button
-          onClick={() => navigate("/user/folders")}
-          className="text-sm text-indigo-400 hover:underline flex items-center gap-1"
-        >
-          Explore more <ArrowRight size={14} />
-        </button>
-      </div>
-
-      {/* Folder Cards */}
-      <div className="grid gap-3">
-        {latestFolders.map((folder) => (
-          <div
-            key={folder.id}
-            className="flex items-center justify-between p-4 rounded-xl
-            bg-black/40 hover:bg-white/10 transition cursor-pointer"
-            onClick={() => navigate(`/user/folders/${folder.id}`)}
-          >
-            <div className="flex items-center gap-3">
-              <Folder className="text-indigo-300" />
-              <div>
-                <p className="font-medium">{folder.name}</p>
-                <span className="text-xs text-white/60">
-                  {folder.files} files
+      {
+      folders.length > 0 ? (
+        <>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {folders.map((folder) => (
+              <div
+                key={folder?._id}
+                onClick={() => navigate(`/user/folder/${folder?._id}`)}
+                className="flex flex-col items-center justify-center p-4 rounded-xl
+                           bg-gradient-to-br from-indigo-700 via-violet-700 to-black
+                           cursor-pointer hover:scale-105 transition shadow-lg"
+              >
+                <PiFoldersFill className="text-yellow-400 text-5xl mb-2" />
+                <span className="text-white font-medium truncate">
+                  {folder?.foldername}
                 </span>
+                
               </div>
-            </div>
+              
+             
+              
+            ))}
           </div>
-        ))}
-      </div>
+
+          <div className="mt-4 text-end">
+            <button
+              onClick={() => navigate("/user/allfolders")}
+              className="px-5 py-1 rounded-full bg-yellow-400 border border-violet-700 hover:bg-violet-700"
+            >
+              Explore More..
+            </button>
+          </div>
+        </>
+      ) : (
+        <p className="text-gray-400">No folders yet</p>
+        
+        
+      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
 function Complaint() {
+  
   return (
     <>
     <div className="p-6 rounded-2xl bg-white/10 backdrop-blur border border-white/10">
@@ -14,10 +15,10 @@ function Complaint() {
       </p>
 
       <Link
-        to='/user/complaint'
+        to='/submit-complaint'
         className="inline-block px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition"
       >
-        My Complaints
+       Complaints
       </Link>
     </div>
     </>

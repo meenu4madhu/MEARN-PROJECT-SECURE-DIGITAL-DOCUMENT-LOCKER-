@@ -1,12 +1,7 @@
 import React, { useState } from "react";
-import { FaTimes } from "react-icons/fa";
-import { MdSpaceDashboard } from "react-icons/md";
 import { FaFolderPlus } from "react-icons/fa6";
-import { GrStorage } from "react-icons/gr";
 import { IoMailSharp } from "react-icons/io5";
-import { FaUser } from "react-icons/fa";
-import { FaPowerOff } from "react-icons/fa6";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { MdWorkHistory } from "react-icons/md";
 import { FcFullTrash } from "react-icons/fc";
 
@@ -17,8 +12,8 @@ const navigate = useNavigate();
   return (
     
     <>
-   <div className="h-screen w-20 bg-gradient-to-b from-zinc-900 to-black
-      flex flex-col items-center pt-24 gap-8 fixed left-0 top-0">
+   <div className=" h-screen w-20 bg-gradient-to-b from-zinc-900 to-black
+      flex  flex-col md:items-center pt-24 gap-8 fixed left-0 top-0">
 
       {/* CREATE FOLDER */}
       <button

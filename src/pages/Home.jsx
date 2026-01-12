@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import Servicesection from '../components/Servicesection'
 import Features from '../components/Features'
 import Security from '../components/Security'
+import Footer from '../components/Footer'
 
 function Home() {
   return (
@@ -54,7 +55,9 @@ function Home() {
       <Servicesection />
       <Features />
       <Security />
+      <Footer/>
     </>
+    
   )
 }
 
