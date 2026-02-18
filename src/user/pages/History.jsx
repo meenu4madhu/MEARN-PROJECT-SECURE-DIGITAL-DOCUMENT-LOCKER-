@@ -38,25 +38,7 @@ const handleView = async (fileId) => {
 
 
 
-const handleShare = async (fileId) => {
-  try {
-    const res = await shareFileAPI(fileId);
 
-    if (res?.status === 200 && res.data?.shareUrl) {
-      // copy link
-      await navigator.clipboard.writeText(res.data.shareUrl);
-
-      // OPEN share page
-      window.open(res.data.shareUrl, "_blank");
-
-    } else {
-      alert("Failed to share file");
-    }
-  } catch (error) {
-    console.log(error);
-    alert("Something went wrong");
-  }
-};
 
 const handleDelete = async (fileId) => {
   if (!window.confirm("Are you sure you want to delete this file?")) return;

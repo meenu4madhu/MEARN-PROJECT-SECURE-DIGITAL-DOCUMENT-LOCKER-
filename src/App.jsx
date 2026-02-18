@@ -15,7 +15,7 @@ import Admindashboard from "./admin/pages/Admindashboard"
 import Userslist from "./admin/pages/Userslist"
 import Complaintsview from"./admin/pages/Complaintsview"
 import Adminstorage from"./admin/pages/Adminstorage"
-import ShareFile from "./user/pages/ShareFile"
+
 
 
 
@@ -45,8 +45,7 @@ useEffect(() => {
         <Route path='/user/trash' element={<Trashpage/>}/>
         <Route path='/submit-complaint' element={<Complaintsubmit/>}/>
         <Route path="/user/allfolders" element={<FolderPage />} />
-        <Route path="/share/:token" element={<ShareFile />} />
-
+       
 
         <Route path="/admin/dashboard" element={<Admindashboard />} />
         <Route path="/admin/all-users" element={<Userslist />} />
