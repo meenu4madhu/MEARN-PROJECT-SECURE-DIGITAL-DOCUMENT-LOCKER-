@@ -33,7 +33,7 @@ function Createfolder({ open, onClose, onCreate }) {
           placeholder="Folder name"
           value={foldername}
           onChange={(e) => setFolderName(e.target.value)}
-          className="placeholder-gray-400 w-full border rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="placeholder-gray-400 w-full border rounded-lg px-3 text-white py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         <div className="flex justify-end gap-3">

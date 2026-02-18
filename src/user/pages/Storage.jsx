@@ -1,8 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { HardDrive } from "lucide-react";
+import { userTotalStorageAPI } from '../../services/allAPI';
+
 
 function Storage() {
-  
+ const [usedMB, setUsedMB] = useState(0);
+
+  const getUserStorage = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await userTotalStorageAPI(token);
+
+      setUsedMB(Number(response.data.usedMB));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getUserStorage();
+  }, []);
+
   return (
     <>
 
@@ -13,7 +32,7 @@ function Storage() {
       </div>
 
       <p className="text-sm text-white/70 mb-3">
-        Used: 1.2GB / 5GB
+         {usedMB} MB used
       </p>
 
       <div className="w-full h-2 bg-white/10 rounded-full">

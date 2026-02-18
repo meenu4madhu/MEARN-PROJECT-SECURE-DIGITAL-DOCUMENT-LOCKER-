@@ -61,6 +61,7 @@ const handleCreateFolder = async (foldername) => {
 
     if (res.status === 200) {
       toast.success("Folder Created...")
+      getAllFolders()
       setFolders((prev) => [
         ...prev,
         {
@@ -71,7 +72,11 @@ const handleCreateFolder = async (foldername) => {
       
       setCreateFolderOpen(false);
       
-    }else{alert("Folder creation failed");}
+    }else if(res.status==400){
+     alert("Folder name already exist.try with another one! "); 
+    }
+    else
+    {alert("Folder creation failed");}
   } catch (err) {
     console.log(err);
     
@@ -115,6 +120,12 @@ const handleFileUpload = async () => {
       setSelectedFile(null);
       setSelectedFolder("");
       setShowUploadBox(false);
+      
+    }else{
+      toast.error("Failed To Upload File!!!");
+      setSelectedFile(null);
+      setSelectedFolder("");
+      setShowUploadBox(false);
     }
   }} catch (error) {
     toast.error("Upload failed");
@@ -130,6 +141,7 @@ const handleFileUpload = async () => {
   setProfileOpen={setProfileOpen}
   onNotificationClick={handleOpenNotifications}
   hasNotifications={hasNotifications}
+  open={notificationOpen}
 />
 <Profile open={profileOpen} onClose={() => setProfileOpen(false)} />
 <div className="flex pt-16 px-16">

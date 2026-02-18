@@ -11,6 +11,11 @@ export const loginAPI = async(userDetails)=>{
     return await commonAPI("POST",`${serverURL}/user/login`,userDetails)
 }
 
+export const googleLoginAPI = async(userDetails)=>{
+    return await commonAPI("POST",`${serverURL}/google/sign-in`,userDetails)
+
+}
+
 // create folder : called by userdashboard component when create button clicked
 export const createFolderAPI = async(reqBody,reqHeader)=>{
     return await commonAPI("POST",`${serverURL}/user/create-folder`,reqBody)
@@ -62,6 +67,11 @@ export const submitComplaintAPI = async (message,headers) =>{
 return await  commonAPI("POST",`${serverURL}/submit-complaint`,{message},headers);
 }
 
+// fetch Complaint by user
+export const fetchComplaintsAPI = async (headers) =>{
+return await  commonAPI("GET",`${serverURL}/user/complaintList`,{},headers);
+}
+
 // admin - get all users
 export const getAllAdminUsersAPI = async (reqHeader) =>{
 return await  commonAPI("GET",`${serverURL}/admin/all-users`,reqHeader);
@@ -81,3 +91,39 @@ return await  commonAPI("PATCH",`${serverURL}/reply/${complaintId}`,{replyMessag
 export const getUserNotificationsAPI = async () =>{
 return await  commonAPI("GET",`${serverURL}/user/notifications`,{});
 }
+
+// trash
+export const getTrashFilesAPI = async () =>{
+return await  commonAPI("GET",`${serverURL}/user/trash`,{});
+}
+
+//restore
+export const restoreFileAPI = async (fileId) =>{
+return await  commonAPI("PUT",`${serverURL}/user/restore/${fileId}`,{});
+} 
+
+// get User profile :user
+
+export const getUserProfileAPI = async (token) =>{
+return await  commonAPI("GET",`${serverURL}/user-profile`,{},token);
+} 
+
+// update password
+export const updatePasswordAPI = async (reqBody,reqHeader) =>{
+return await  commonAPI("PUT",`${serverURL}/user/update-password`,reqBody,reqHeader);
+} 
+
+// storage info - user 
+export const userTotalStorageAPI = async (token) =>{
+return await  commonAPI("GET",`${serverURL}/user-storageinfo`,{},token);
+} 
+
+// storage info - Admin 
+export const adminStorageInfoAPI = async () =>{
+return await  commonAPI("GET",`${serverURL}/admin-storageinfo`,{});
+} 
+
+// getUsersStorageForAdminAPI each user total storage - admin
+export const getUsersStorageForAdminAPI = async (token) =>{
+return await  commonAPI("GET",`${serverURL}/admin-userstorage`,{},token);
+} 

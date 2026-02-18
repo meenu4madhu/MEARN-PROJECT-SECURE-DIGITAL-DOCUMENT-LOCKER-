@@ -1,32 +1,73 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
+import { getUserProfileAPI, updatePasswordAPI } from "../../services/allAPI";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
 
 function Profile({ open, onClose }) {
   if (!open) return null;
 
-  const user = {
-    name: "Max Well",
-    email: "max123@gmail.com",
-    role: "User",
-    created: "12 Aug 2025",
-  };
-
+  const navigate =useNavigate()
+  const [user, setUser] = useState(null);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+   useEffect(() => {
+    fetchProfile();
+  }, []);
 
-    if (newPassword !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
+   const fetchProfile = async () => {
+      try {
+        
+        
+        const token = sessionStorage.getItem("token"); // or localStorage
+        if (!token) return;
 
-    alert("Password updated successfully");
+        const res = await getUserProfileAPI(token); // pass token
+        if (res.status === 200) {
+          setUser(res.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch profile:", err);
+      }
+    };
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (newPassword !== confirmPassword) {
+    toast.error("Passwords do not match");
+    return;
+  }
+  
+  const reqBody = {
+    currentPassword,
+    newPassword,
+  };
+ const token = sessionStorage.getItem("token")
+    // console.log(token); 
+    
+    const reqHeader = {
+    "Authorization": `Bearer ${token}`
+     }
+     
+
+  const res = await updatePasswordAPI(reqBody,reqHeader);
+console.log(res.data);
+
+  if (res.status === 200) {
+    toast.success("Password updated successfully");
+    navigate('/login')
+    setCurrentPassword("");
     setNewPassword("");
     setConfirmPassword("");
-  };
+  } else {
+    toast.error(res.response?.data || "Update failed");
+  }
+};
 
+if (!user) return <div className="text-white p-4">Loading profile...</div>;
   return (
     <>
       {/* Overlay */}
@@ -64,7 +105,7 @@ function Profile({ open, onClose }) {
               flex items-center justify-center
               text-4xl font-bold
             ">
-              {user.name.charAt(0)}
+              {user?.username.charAt(0)}
             </div>
           </div>
 
@@ -72,19 +113,19 @@ function Profile({ open, onClose }) {
           <div className="space-y-3 text-sm ">
             <div className="flex justify-between">
               <span className="text-white/60">Name</span>
-              <span>{user.name}</span>
+              <span>{user?.username}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-white/60">Email</span>
-              <span>{user.email}</span>
+              <span>{user?.email}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-white/60">Role</span>
-              <span>{user.role}</span>
+              <span>{user?.role}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-white/60">Joined</span>
-              <span>{user.created}</span>
+              <span>{new Date(user?.createdAt).toLocaleDateString()}</span>
             </div>
           </div>
 
@@ -98,7 +139,14 @@ function Profile({ open, onClose }) {
             <h3 className="text-sm font-semibold text-violet-400">
               Change Password
             </h3>
-
+            {/* CURRENT PASSWORD */}
+  <input
+    type="password"
+    placeholder="Current Password"
+    value={currentPassword}
+    onChange={(e) => setCurrentPassword(e.target.value)}
+    className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20"
+  />
             <input
               type="password"
               placeholder="New Password"
@@ -139,6 +187,11 @@ function Profile({ open, onClose }) {
           </form>
         </div>
       </div>
+       <ToastContainer
+      position="top-center"
+      autoClose={2000}
+      theme="colored"
+      />
     </>
   );
 }

@@ -7,7 +7,15 @@ function Footer() {
 
     {/* <!-- Brand & Tagline --> */}
     <div class="flex-1 space-y-2">
+      <div className="flex items-center ">
+<img
+      className="w-12 h-12 sm:w-14 sm:h-14 md:w-20 md:h-20"
+      src="./sddl-logo.png"
+      alt="logo"
+    />
       <h2 class="text-3xl font-extrabold tracking-wide">SecureDoc</h2>
+      </div>
+      
       <p class="text-gray-200 text-sm">The modern digital document locker. Fast. Secure. Reliable.</p>
     </div>
 

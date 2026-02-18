@@ -4,11 +4,17 @@ import { IoMailSharp } from "react-icons/io5";
 import {  useNavigate } from "react-router-dom";
 import { MdWorkHistory } from "react-icons/md";
 import { FcFullTrash } from "react-icons/fc";
-
+import { FaPowerOff } from "react-icons/fa";
 
 function Usersidebar({ sidebarOpen, setSidebarOpen, setProfileOpen ,setCreateFolderOpen}) {
   
 const navigate = useNavigate();
+
+ const logout =()=>{
+    sessionStorage.clear()
+    navigate('/login')
+
+  }
   return (
     
     <>
@@ -34,7 +40,7 @@ const navigate = useNavigate();
 
       {/* Complaints */}
       <button
-        onClick={() => navigate("/user/complaint")}
+        onClick={() => navigate("/submit-complaint")}
         className="text-gray-400 hover:text-violet-400 text-xl transition"
       >
         <IoMailSharp />
@@ -47,6 +53,13 @@ const navigate = useNavigate();
       >
         <FcFullTrash />
       </button>
+      {/* logout */}
+         <button
+          onClick={() => logout()}
+          className="text-gray-400 hover:text-pink-400 text-lg transition"
+        >
+          <FaPowerOff />
+        </button>
      
     </div>
       

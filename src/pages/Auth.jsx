@@ -1,8 +1,9 @@
 import React, { useState,useContext } from 'react'
 import { FaEye, FaEyeSlash, FaUser } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
-import { loginAPI, registerAPI } from '../services/allAPI'
+import {googleLoginAPI, loginAPI, registerAPI } from '../services/allAPI'
 import { ToastContainer, toast } from 'react-toastify';
+import { GoogleLogin } from '@react-oauth/google';
 
 
 
@@ -10,26 +11,29 @@ function Auth({insideRegister}) {
   const navigate = useNavigate()
   //  const{role,setAuthorised}=useContext()
   const [viewPassword,setViewPassword]=useState(false)
+ 
   const [userDetails,setuserDetails]=useState({
     username:"",email:"",password:""
   })
 
   const handleRegister=async(e)=>{
+    
      e.preventDefault()
     const {username,email,password}=userDetails
     if(email && password && username)
     {
+      
       // toast.success("API Call")
       try{
     const result = await registerAPI(userDetails)
     console.log(result);
     if(result.status==200){
       toast.success("Register Successfully...Please login to SecureDoc!!")
-      setuserDetails({username:"",email:"",password:""})
+      setuserDetails({username:"",email:"",password:""})  
       navigate('/login')
     }
     else if(result.status==409){
-    toast.warning(result.response.data)
+    toast.error(result.response.data)
      setuserDetails({username:"",email:"",password:""})
       navigate('/login')
     }
@@ -46,7 +50,7 @@ function Auth({insideRegister}) {
 
     }
     else{
-      toast.info("Please fill the form completely!!")
+   toast.warning("Please fill the form completely!!!")
     }
   }
    // handle login
@@ -76,8 +80,10 @@ function Auth({insideRegister}) {
        
     }
     
-    else if(result.status==401 || result.status==404){
-    toast.warning(result.response.data)
+    else if(result.status==401 ){
+    toast.warning("Account doesn't Exist !!")
+    console.log(result.response.data);
+    
     setuserDetails({username:"",email:"",password:""})
     }
     else{
@@ -85,7 +91,8 @@ function Auth({insideRegister}) {
       setuserDetails({username:"",email:"",password:""})
     }
       }catch(err){
-    console.log(err);
+        console.log(err);
+        
     
       }
 
@@ -95,6 +102,35 @@ function Auth({insideRegister}) {
     }
   }
   
+    const handleGoogleLogin = async(credentialResponse)=>{
+   
+    console.log("Inside handleGoogleLogin");
+    console.log(credentialResponse);
+    const decode = jwtDecode(credentialResponse.credential)
+    console.log(decode)
+// email,name,pic
+const result = await googleLoginAPI({username:decode.name,email:decode.email,password:'googlePassword',picture:decode.picture})
+  if(result.status==200){
+       toast.success("Login Successfull..")
+       sessionStorage.setItem("token",result.data.token)
+       sessionStorage.setItem("user",JSON.stringify(result.data.user))
+       setAuthorised(true)
+       setTimeout(()=>{
+        if(result.data.user.role=="admin"){
+        navigate('/admin/dashboard')
+        }
+        else{
+          navigate('/user-dashboard')
+        }
+       },2500)
+       
+    }
+    else{
+      console.log(result);
+      
+      toast.error("Something went wrong!!!")
+    }
+  }
   return (
     <>
      <div className='w-full min-h-screen  flex justify-center items-center flex-col' style={{backgroundImage:'url("https://files.123freevectors.com/wp-content/original/106944-indigo-abstract.jpg")',backgroundSize: 'cover',
@@ -149,7 +185,20 @@ function Auth({insideRegister}) {
     </div>
   {/* google authentication */}
   <div className="text-center my-5">
-    { !insideRegister && <p className='text-indigo-500'>----------------------------or-------------------------------</p>
+    { !insideRegister &&
+    <> <p className='text-indigo-500'>----------------------------or-------------------------------</p>
+     <div className='my-5 flex justify-center items-center w-full'>
+            <GoogleLogin
+            onSuccess={credentialResponse => {
+              handleGoogleLogin(credentialResponse)
+            }}
+            onError={() => {
+              console.log('Login Failed');
+            }}
+          />
+      </div>
+
+</>
     }
    
   </div>

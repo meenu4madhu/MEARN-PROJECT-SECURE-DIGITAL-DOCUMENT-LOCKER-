@@ -1,20 +1,44 @@
 import React from "react";
 import { Trash2, RotateCcw, ArrowLeft, Folder } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useState } from "react";
+import { getTrashFilesAPI ,restoreFileAPI} from "../../services/allAPI";
+
+
 
 function Trashpage() {
   const navigate = useNavigate();
+const [trashedFiles, setTrashedFiles] = useState([]);
+ useEffect(() => {
+  fetchTrashFiles();
+}, []);
 
-  // Sample trashed file (for design testing)
-  const trashedFiles = [
-    {
-      id: 1,
-      name: "Aadhar.pdf",
-      deletedAt: "10 Aug 2025",
-      originalFolder: "ID Proofs",
-      size: "1.2 MB",
-    },
-  ];
+const fetchTrashFiles = async () => {
+  try {
+    const res = await getTrashFilesAPI();
+    if (res.status === 200) {
+      setTrashedFiles(res.data);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const handleRestore = async (fileId) => {
+  try {
+    const res = await restoreFileAPI(fileId)
+    if (res.status === 200) {
+      // remove restored file from UI
+      setTrashedFiles((prev) =>
+        prev.filter((file) => file._id !== fileId)
+      )
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-indigo-950 to-violet-950 p-3 text-white">
@@ -68,7 +92,7 @@ function Trashpage() {
 
           {trashedFiles.map((file) => (
             <div
-              key={file.id}
+              key={file?._id}
               className="flex flex-col md:flex-row md:items-center md:justify-between gap-4
               p-6 rounded-2xl
               bg-white/10 backdrop-blur
@@ -77,21 +101,22 @@ function Trashpage() {
             >
               {/* File Info */}
               <div>
-                <p className="text-lg font-semibold">{file.name}</p>
+                <p className="text-lg font-semibold">{file?.filename}</p>
 
                 <div className="flex flex-wrap items-center gap-4 text-sm text-white/70 mt-2">
-                  <span>Size: {file.size}</span>
-                  <span>Deleted on: {file.deletedAt}</span>
+                  {/* <span>Size: {file.size}</span> */}
+                  <span>Deleted on:{new Date(file?.trashedAt).toLocaleDateString()}</span>
 
                   <span className="flex items-center gap-1">
                     <Folder size={14} />
-                    From: {file.originalFolder}
+                    From: {file?.originalFolderId?.foldername || "Unknown"}
                   </span>
                 </div>
               </div>
 
               {/* Restore Button */}
               <button
+              onClick={() => handleRestore(file._id)}
                 className="flex items-center justify-center gap-2
                 px-5 py-2 rounded-xl
                 bg-gradient-to-r from-violet-600 to-indigo-600

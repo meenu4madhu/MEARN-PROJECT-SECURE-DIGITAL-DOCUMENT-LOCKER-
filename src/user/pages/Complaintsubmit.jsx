@@ -1,14 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MessageSquare, Send, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { submitComplaintAPI } from "../../services/allAPI";
+import { submitComplaintAPI,fetchComplaintsAPI } from "../../services/allAPI";
 
 
 
 function Complaintsubmit() {
     const [complaints,setComplaints] = useState([]); // empty for now
   const [message, setMessage] = useState("");
+  const [allMsg,setAllMsg]=useState([])
   const navigate = useNavigate();
+  useEffect(()=>{
+const fetchComplaints=async()=>{
+  try{
+    const token = sessionStorage.getItem("token");
+    const headers = { Authorization: `Bearer ${token}` };
+     const res = await fetchComplaintsAPI(headers);
+     if(res.status==200){
+     setAllMsg(res.data)
+     console.log(allMsg);
+     
+      
+     }
+     else{
+      alert("Complaints Fetching Failed!!!")
+     }
+
+  }catch(err){
+    console.log(err);
+    
+  }
+}
+fetchComplaints()
+  },[])
 
 const handleSubmit = async () => {
   if (!message) return alert("Please write your complaint!");
@@ -95,7 +119,7 @@ const handleSubmit = async () => {
       </div>
 
       {/* Complaints List */}
-      {complaints.length === 0 ? (
+      {allMsg.length === 0 ? (
         <div className="flex flex-col items-center justify-center mt-24 opacity-80">
           <MessageSquare className="text-indigo-500 text-6xl mb-4" />
           <p className="text-lg">No complaints raised</p>
@@ -105,7 +129,7 @@ const handleSubmit = async () => {
         </div>
       ) : (
         <div className="space-y-4">
-          {complaints?.map((item) => (
+          {allMsg?.map((item) => (
             <div
               key={item?._id}
               className="p-5 rounded-xl bg-white/10 border border-white/10"

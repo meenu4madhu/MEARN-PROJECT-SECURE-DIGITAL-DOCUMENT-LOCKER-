@@ -140,7 +140,7 @@ const handleDelete = async (fileId) => {
                   <div className="flex justify-center gap-8 text-3xl">
                     {/* <HiOutlineEye onClick={() => handleView(file._id)} className="cursor-pointer text-indigo-200 hover:text-white" /> */}
                     <RiDownload2Fill onClick={() => handleView(file._id)} className="cursor-pointer text-indigo-300 hover:text-white" />
-                    <FaShareFromSquare onClick={() => handleShare(file._id)} className="cursor-pointer text-blue-500 hover:text-white" />
+                    {/* <FaShareFromSquare onClick={() => handleShare(file._id)} className="cursor-pointer text-blue-500 hover:text-white" /> */}
                     <MdDelete  onClick={() => handleDelete(file._id)} className="cursor-pointer text-red-600 hover:text-white" />
                   </div>
                 </td>
