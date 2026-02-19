@@ -16,6 +16,7 @@ import Userslist from "./admin/pages/Userslist"
 import Complaintsview from"./admin/pages/Complaintsview"
 import Adminstorage from"./admin/pages/Adminstorage"
 import ProtectedRoute from "./components/ProtectedRoute";
+import Pnf from "./pages/Pnf"
 
 
 
@@ -56,7 +57,8 @@ useEffect(() => {
         <Route path="/admin/view-complaints" element={<ProtectedRoute allowedRole="admin"><Complaintsview /></ProtectedRoute>} />
         <Route path="/admin/storage" element={<ProtectedRoute allowedRole="admin"><Adminstorage /></ProtectedRoute>} />
 
-        
+        <Route path="*" element={<Pnf />} />
+
 
       </Routes>
   
