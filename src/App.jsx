@@ -15,6 +15,7 @@ import Admindashboard from "./admin/pages/Admindashboard"
 import Userslist from "./admin/pages/Userslist"
 import Complaintsview from"./admin/pages/Complaintsview"
 import Adminstorage from"./admin/pages/Adminstorage"
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 
@@ -38,19 +39,22 @@ useEffect(() => {
         <Route path='/' element={<Home/>}/>
         <Route path='/login' element={<Auth/>}/>
         <Route path='/register' element={<Auth insideRegister={true}/>}/>
-        <Route path='/user-dashboard' element={ <Userdashboard sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />}/>
-        <Route path='/user/storage' element={<Storage/>}/>
-        <Route path='/user/history' element={<History/>}/>
-        <Route path="/user/folder/:folderId" element={<History />} />
-        <Route path='/user/trash' element={<Trashpage/>}/>
-        <Route path='/submit-complaint' element={<Complaintsubmit/>}/>
-        <Route path="/user/allfolders" element={<FolderPage />} />
+        <Route path='/user-dashboard' element={
+          <ProtectedRoute allowedRole="user">
+         <Userdashboard sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+          </ProtectedRoute> }/>
+        <Route path='/user/storage' element={<ProtectedRoute allowedRole="user"><Storage/></ProtectedRoute>}/>
+        <Route path='/user/history' element={<ProtectedRoute allowedRole="user"><History/></ProtectedRoute>}/>
+        <Route path="/user/folder/:folderId" element={<ProtectedRoute allowedRole="user"><History /></ProtectedRoute>} />
+        <Route path='/user/trash' element={<ProtectedRoute allowedRole="user"><Trashpage/></ProtectedRoute>}/>
+        <Route path='/submit-complaint' element={<ProtectedRoute allowedRole="user"><Complaintsubmit/></ProtectedRoute>}/>
+        <Route path="/user/allfolders" element={<ProtectedRoute allowedRole="user"><FolderPage /></ProtectedRoute>} />
        
 
-        <Route path="/admin/dashboard" element={<Admindashboard />} />
-        <Route path="/admin/all-users" element={<Userslist />} />
-        <Route path="/admin/view-complaints" element={<Complaintsview />} />
-        <Route path="/admin/storage" element={<Adminstorage />} />
+        <Route path="/admin/dashboard" element={<ProtectedRoute allowedRole="admin"><Admindashboard /></ProtectedRoute>} />
+        <Route path="/admin/all-users" element={<ProtectedRoute allowedRole="admin"><Userslist /></ProtectedRoute>} />
+        <Route path="/admin/view-complaints" element={<ProtectedRoute allowedRole="admin"><Complaintsview /></ProtectedRoute>} />
+        <Route path="/admin/storage" element={<ProtectedRoute allowedRole="admin"><Adminstorage /></ProtectedRoute>} />
 
         
 
